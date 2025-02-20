@@ -5,5 +5,10 @@ output: html_document
 
 ```{r}
 library(tidyverse)
+
+a <- read_csv("data/mydata.csv")
+blah
+
 ```
+
 
