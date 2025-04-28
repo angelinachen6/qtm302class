@@ -4,7 +4,7 @@ author:
   - "Cassie Yu"
   - "Yoonseo Bae"
   - "Angelina Chen"
-date: "2025-04-28"
+date: "2025-03-04"
 output: html_document
 ---
 # Introduction (MIGHT NEED TO ADD MORE DETAILS FROM OUR RESEARCH PROPOSAL?)  
@@ -32,14 +32,24 @@ library(ggplot2)
 
 # Ethical Consideration 
 
-Although the dataset is publicly available, it is essential to approach the analysis with ethical responsibility. Since the stress levels and demographic factors are complex and influenced by various social, economic, and cultural contexts, we should be mindful of potential biases in self-reported data, as responses may be affected by individual perceptions, societal expectations, or access to mental health resources. It is also important to avoid reinforcing stereotypes about stress levels across age groups, gender identities, or regions. Additionally, disparities in mental health awareness and care should be acknowledged, as they may impact the patterns observed in the data. Therefore, ensuring responsible interpretation and presentation of findings is crucial to prevent misrepresentation and contribute to a more accurate and ethical understanding of stress distribution.
+When working with survey data that captures sensitive personal information—such as stress levels, coping mechanisms, employment status, and health outcomes—it is crucial to handle the data ethically to protect respondents' privacy and dignity. In the context of the APA’s "Stress in America" survey dataset, several specific considerations are particularly important.
+
+First, although the dataset has been anonymized, variables such as employment status combined with detailed stress indicators could risk re-identification when filtered into smaller subgroups. Therefore, we are careful to report only aggregated results without singling out small or potentially identifiable groups.
+
+Second, the data reflects individuals' experiences during a period of economic hardship (2007–2009), when financial stress and mental health issues were especially heightened. Recognizing the vulnerability of the respondents, we approach the analysis with sensitivity, avoiding framing that could blame individuals for their stress responses or imply personal failure.
+
+Third, issues of sampling bias must be acknowledged. Because participation in online surveys may be influenced by internet access, willingness to disclose sensitive information, there may be underrepresented in the data. We keep these limitations in mind when interpreting and generalizing our results.
+
+Finally, beyond technical confidentiality, ethical analysis also involves critical reflection on the societal implications of our findings. When discussing gendered stress differences, for example, we aim not to reinforce stereotypes but to highlight systemic factors that might explain disparities.
 
 ```{r}
 data <- read.delim(file = "./data/37288-0003-Data.tsv", sep = '\t', header = TRUE)
 ```
 
 # Data Cleaning
-Since the dataset contains about 4050 attributes, we decided to select variables that are relevant to our research. 
+Before analysis, we need to clean and prepare the data to ensure that our results are meaningful and reliable. Given the breadth of the survey, which includes numerous variables on stressors, symptoms, and coping strategies,about 4050 attributes, we narrowed our focus to variables most relevant to our research goals: stress levels, coping mechanisms, employment status, and gender.
+
+Focusing on these variables allows us to address key research questions about how economic stressors during the 2008 crisis affected people differently across demographic lines. By reducing the dataset to a manageable and targeted subset, we can conduct a more focused and interpretable analysis.
 
 The variables used in our analysis are:
 
@@ -150,7 +160,10 @@ ggplot(cleaned_data, aes(x = Stress_Level)) +
 Based on the fact that the 30s and 40s represent the average age range in the dataset, the red histogram shows that individuals in this age group typically experience a stress level of around 7.5, with a skew toward higher stress ratings.
 
 ## Exploratory Analysis of Gender
-To understand the gender distribution for the participants of the survey, we performed analysis on the gender identities of the participants.
+
+We investigate how stress experiences varied by gender. Prior research suggests that stress exposure and coping mechanisms can differ significantly between men and women, especially during economic downturns. We aim to explore whether such patterns emerge in this dataset as well.
+
+In this section, we generate visualizations comparing stress levels, coping mechanisms, and sources of stress between men and women. We first start with understanding the gender distribution for the participants of the survey. We performed analysis on the gender identities of the participants. 
 
 This was the response to the survey question: "How do you describe yourself?"
 
@@ -188,7 +201,7 @@ cleaned_data <- cleaned_data %>%
   )
 ```
 
-Respondents who selected 1 for 'Male' or 'Female' are nowcategorized accordingly. The other three response categories (Transgender, Other_Gender, Non_Binary) can be disregarded as we have confirmed above that all respondents answered the ""How do you describe yourself?" question as either Male or Female. 
+Respondents who selected 1 for 'Male' or 'Female' are now categorized accordingly. The other three response categories (Transgender, Other_Gender, Non_Binary) can be disregarded as we have confirmed above that all respondents answered the ""How do you describe yourself?" question as either Male or Female. 
 
 To help visualize the number of males and females in our data, we created a bar graph similar to the one for "age." It is color coded pink (for 'female') and blue (for 'male').
 
@@ -219,7 +232,7 @@ Looking at this bar graph, the fact that more females responded to the survey co
 
 ## Distribution of Respondents by Metropolitan Statistical Area (MSA)
 
-To understand where in the US the survey's participants are from, we performed exploratory analysis of respondents metropolitan origin.
+To understand where in the US the survey's participants are from, we performed exploratory analysis of respondents metropolitan origin. This helps provide context for interpreting stress patterns across different urban regions in the United States.
 
 ```{r, echo = FALSE}
 # Using the function filter(), we insure that there are no missing values for this attribute. Using the function group_by(), we are grouping the data based on metropolitan area to count the number of people in each area.
