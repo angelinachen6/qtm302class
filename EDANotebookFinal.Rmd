@@ -1,0 +1,401 @@
+---
+title: "Gendered Differences of Stress During the 2008 Economic Recession"
+author: 
+  - "Cassie Yu"
+  - "Yoonseo Bae"
+  - "Angelina Chen"
+date: "2025-04-28"
+output: html_document
+---
+# Introduction (MIGHT NEED TO ADD MORE DETAILS FROM OUR RESEARCH PROPOSAL?)  
+The 2008 economic recession precipitated unprecedented financial instability, disrupting gendered labor dynamics and exacerbating stress disparities. This study examines how economic stress—defined as acute financial uncertainty and employment precarity—manifested differentially by gender during this period, with a focus on mediating factors such as employment sector, caregiving responsibilities, and societal expectations. While chronic stress literature broadly links stress to neurobiological and cardiovascular outcomes (McEwen et al., 2017; Esch et al., 2002), this analysis narrows its scope to the intersection of financial stress and gender, a critical gap given that men experienced disproportionate job losses in male-dominated industries (e.g., 72% of construction/manufacturing layoffs; Starr, 2014), while married women’s employment rose 5.2% as they assumed breadwinning roles (BLS, 2008).
+
+Gendered stress disparities are well-documented: women exhibit higher rates of stress-precipitated depression (Kuehner, 2017), whereas men are more vulnerable to stress-related substance use disorders (Boughner & Frewen, 2016). However, prior studies neglect how systemic economic shocks amplify these disparities, relying on clinician-reported data (Heretick, 2013) or limited mental health indicators (Dagher et al., 2015). This study addresses these limitations by analyzing direct self-reports from the Stress in America survey (APA, 2008), which captures granular data on stress sources, coping mechanisms, and health outcomes stratified by gender.
+
+**Research Question:**
+How did stress experiences and coping mechanisms differ by gender during the 2008 economic crisis, and how were these differences linked to psychological and physical health outcomes?
+
+```{r,echo = FALSE}
+knitr::opts_chunk$set(
+  echo=TRUE,
+  warning= FALSE,
+  message = FALSE,
+  fig.align = "center")
+
+```
+
+```{r,echo = FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+# Ethical Consideration 
+
+Although the dataset is publicly available, it is essential to approach the analysis with ethical responsibility. Since the stress levels and demographic factors are complex and influenced by various social, economic, and cultural contexts, we should be mindful of potential biases in self-reported data, as responses may be affected by individual perceptions, societal expectations, or access to mental health resources. It is also important to avoid reinforcing stereotypes about stress levels across age groups, gender identities, or regions. Additionally, disparities in mental health awareness and care should be acknowledged, as they may impact the patterns observed in the data. Therefore, ensuring responsible interpretation and presentation of findings is crucial to prevent misrepresentation and contribute to a more accurate and ethical understanding of stress distribution.
+
+```{r}
+data <- read.delim(file = "./data/37288-0003-Data.tsv", sep = '\t', header = TRUE)
+```
+
+# Data Cleaning
+Since the dataset contains about 4050 attributes, we decided to select variables that are relevant to our research. 
+
+The variables used in our analysis are:
+
+- **DMAGE**: Age of the respondent.
+- **Q268R1**: Gender identity (**Male**).
+- **Q268R2**: Gender identity (**Female**).
+- **Q268R3**: Gender identity (**Transgender**).
+- **Q268R4**: Gender identity (**Other**).
+- **Q268R5**: Gender identity (**Non-binary/Genderqueer/Gender Fluid**).
+- **Q1406**: Metropolitan Statistical Area (**MSA**) code.
+- **Q605**: Stress level in the past month (**Scale: 1-10**).
+- **DMMARSTAT**: Marital status.
+
+We decided to use these variables because we were interested in how stress affected different genders.
+
+```{r}
+# Selecting only the relevant variables to our analysis
+cleaned_data <- data %>%
+  select(UNIQUE, DMAGE, Q268R1, Q268R2, Q268R3, Q268R4, Q268R5, Q1406, Q605, Q635, Q1720, DMMARSTAT, Q610, Q1500)
+
+```
+
+```{r}
+# Renaming variables for clarity
+cleaned_data <- cleaned_data %>%
+  rename(
+    Age = DMAGE,
+    Male = Q268R1,
+    Female = Q268R2,
+    Transgender = Q268R3,
+    Other_Gender = Q268R4,
+    Non_Binary = Q268R5,
+    MSA_Code = Q1406,
+    Stress_Level = Q605,
+    Stress_Before_Mental_Health = Q1720,
+    Marital_Status = DMMARSTAT
+  )
+```
+In multiple columns, 'NA' is the most common row value. This is likely due to the nature of the survey, which allows participants to answer only the questions they want to answer. To ensure our analysis is not biased we removed rows with missing values. We also did some cautionary cleaning so that values such as "age" and "stress levels" did not contain invalid responses such as negative numbers.
+
+```{r}
+# Remove rows with missing or invalid values for key variables
+cleaned_data <- cleaned_data %>%
+  filter(!is.na(Age), !is.na(Stress_Level), Age > 0, Stress_Level > 0)
+```
+
+# Analysis of Distribution of Individual Variables
+
+## Exploratory Analysis of Age
+To get a better sense of who the survey's participants are, we decided to take a look at their ages.
+This was the response to the question on the survey: "What is your age?"
+
+
+```{r, echo = FALSE}
+# We created a function to calculate mode
+mode_func <- function(x) {
+  # Computes the mode of a numeric or categorical vector.
+  #
+  # Args:
+  #   x: A numeric or categorical vector for which the mode is calculated.
+  #      The vector must have at least one value and should not be empty.
+  #
+  # Returns:
+  #   The most frequently occurring value in the vector.
+  #   If there are multiple modes, returns the first one encountered.
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))] # Finds the most frequent value
+}
+
+# This first chunk calculates the mean, median, and mode for age
+legend_data <- data.frame(
+  Measure = c("Mean", "Median", "Mode"), 
+  Value = c(mean(cleaned_data$Age), median(cleaned_data$Age), mode_func(cleaned_data$Age)),
+  Color = c("red", "green", "purple")
+)
+
+# This 'ggplot' function helps us plot a bar graph that shows the distribution of age frequency for participants of the survey
+ggplot(cleaned_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  geom_vline(data = legend_data, aes(xintercept = Value, color = Measure), 
+             linetype = "dashed", size = 1) +
+  scale_color_manual(
+    name = "Measures",
+    values = c("Mean" = "red", "Median" = "green", "Mode" = "purple"),
+    labels = paste(legend_data$Measure, ": ", round(legend_data$Value, 2))
+  ) +
+  labs(title = "Distribution of Age", x = "Age", y = "Frequency") +
+  theme_minimal() +
+  theme(legend.position.inside = c(0.85, 0.85))
+```
+
+From this information, we can infer that most people who participate in this study are around 45.
+There are more younger individuals around 34, but the presence of older individuals increases the mean. Thus the target age range for this study is people in their 30s and 40s, with older individuals as the tail of the distribution.
+
+
+## Distribution of Stress Levels
+The question on survey talking about stress levels is: On a scale of 1 to 10, where 1 means you have "little or no stress" and 10 means you have "a great deal of stress," how would you rate your average level of stress during the past
+month?
+
+To analyze participants basic understanding of their stress levels, we used ggplot again to create a histogram.
+
+```{r, echo = FALSE}
+ggplot(cleaned_data, aes(x = Stress_Level)) + 
+  geom_histogram(binwidth = 1, fill = "red", color = "black") + 
+  labs(title = "Average Stress Level", x = "Stress Level (1-10)", y = "Count")
+```
+
+Based on the fact that the 30s and 40s represent the average age range in the dataset, the red histogram shows that individuals in this age group typically experience a stress level of around 7.5, with a skew toward higher stress ratings.
+
+## Exploratory Analysis of Gender
+To understand the gender distribution for the participants of the survey, we performed analysis on the gender identities of the participants.
+
+This was the response to the survey question: "How do you describe yourself?"
+
+```{r, echo = FALSE}
+# First we found the total number of males and females in the dataset, ignoring missing values to prevent errors in analysis.
+
+count_R1 <- sum(cleaned_data$Male, na.rm = TRUE)
+count_R2 <- sum(cleaned_data$Female, na.rm = TRUE)
+sample_size <- nrow(cleaned_data)
+# To check if participants only answered "Male" or "Female" to the question, we checked if it was equal to the sample size which is the number of rows in the dataset.
+
+is_sum_equal <- (count_R1 + count_R2) == sample_size
+comment <- paste(
+  "Number of '1' responses for Male:", count_R1, "\n",
+  "Number of '1' responses for Female:", count_R2, "\n",
+  "Sum of Male and Female responses:", count_R1 + count_R2, "\n",
+  "Sample size:", sample_size, "\n",
+  "Does the sum of Male and Female equal the sample size?", is_sum_equal
+)
+
+cat(comment)
+```
+
+To make it easier to see who in the dataset was female and who was male, we created a new column called "Gender_Identity." Previously 'Male' and 'Female' were in seperate columns, now we have unified them into one column for easier viewing.
+
+```{r}
+# We used the function mutate() to modify the column 'Gender_Identity' using a conditional clause.
+
+cleaned_data <- cleaned_data %>%
+  mutate(
+    Gender_Identity = case_when(
+      Male == 1 ~ "Male",
+      Female == 1 ~ "Female"
+    )
+  )
+```
+
+Respondents who selected 1 for 'Male' or 'Female' are nowcategorized accordingly. The other three response categories (Transgender, Other_Gender, Non_Binary) can be disregarded as we have confirmed above that all respondents answered the ""How do you describe yourself?" question as either Male or Female. 
+
+To help visualize the number of males and females in our data, we created a bar graph similar to the one for "age." It is color coded pink (for 'female') and blue (for 'male').
+
+```{r, echo = FALSE}
+ggplot(cleaned_data, aes(x = Gender_Identity, fill = Gender_Identity)) +
+  geom_bar() +
+  labs(
+    title = "Distribution of Gender Identity",
+    x = "Gender Identity",
+    y = "Count",
+    fill = "Gender Identity"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(
+    values = c(
+      "Male" = "blue",
+      "Female" = "pink"
+    )
+  ) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+
+Looking at this bar graph, the fact that more females responded to the survey could mean that women in their 30s and 40s are more willing to discuss how they feel and therefore, may be more likely to seek help about their stress levels. It could also mean that women feel more stress, which is why they feel more compelled to complete this survey.
+
+## Distribution of Respondents by Metropolitan Statistical Area (MSA)
+
+To understand where in the US the survey's participants are from, we performed exploratory analysis of respondents metropolitan origin.
+
+```{r, echo = FALSE}
+# Using the function filter(), we insure that there are no missing values for this attribute. Using the function group_by(), we are grouping the data based on metropolitan area to count the number of people in each area.
+
+msa_freq <- cleaned_data %>%
+  filter(!is.na(MSA_Code)) %>%
+  group_by(MSA_Code) %>%
+  summarise(Frequency = n(), .groups = 'drop')
+# We also renamed the labels for this attribute from numerical to string so it is easier to understand.
+
+msa_labels <- c(
+  "1" = "NYC MSA",
+  "2" = "Washington D.C. MSA",
+  "3" = "Atlanta MSA",
+  "4" = "Chicago MSA",
+  "5" = "Denver MSA",
+  "6" = "Detroit MSA",
+  "7" = "Los Angeles MSA",
+  "8" = "Seattle MSA",
+  "9" = "All others"
+)
+
+msa_freq <- msa_freq %>%
+  mutate(MSA = msa_labels[as.character(MSA_Code)])
+```
+
+Below is a frequency table that summarizes the count of respondents from each Metropolitan Statistical Area (MSA).
+
+```{r, echo = FALSE}
+ggplot(msa_freq, aes(x = reorder(MSA, -Frequency), y = Frequency, fill = MSA)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Distribution of Respondents by Metropolitan Statistical Area (MSA)",
+    x = "Metropolitan Statistical Area (MSA)",
+    y = "Frequency",
+    fill = "MSA"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+mode_msa <- msa_freq %>%
+  arrange(desc(Frequency)) %>%
+  slice(1) %>%
+  pull(MSA)
+total_valid <- sum(msa_freq$Frequency)
+total_missing <- nrow(cleaned_data) - total_valid
+cat("Most Frequent MSA (Mode):", mode_msa, "\n")
+cat("Total Valid Responses:", total_valid, "\n")
+cat("Total Missing Responses:", total_missing, "\n")
+```
+
+We used code to determine the most frequent MSA, which is Denver. Then we wanted to see how many missing values there were for this attribute. Since there are almost as many missing values as valid values, we can infer that participants did not want to share where they were located. This may be due to confidentiality reasons.
+
+# Analysis of Correlation Between Variables
+
+First we analyzed the correlation between age and stress to see if the target age range for this survey actually had higher stress levels.
+
+## Correlation Between Age and Stress Levels
+
+```{r}
+# Here we compute average stress level per age using group_by() to group by age and then calculating the mean stress level for each age.
+
+age_stress_trend <- cleaned_data %>%
+  group_by(Age) %>%
+  summarize(Average_Stress = mean(Stress_Level, na.rm = TRUE))
+
+# Again we use ggplot to create the line plot. The red line is for trend. The points are blue for each age.
+ggplot(age_stress_trend, aes(x = Age, y = Average_Stress)) +
+  geom_line(color = "red", size = 1) +  
+  geom_point(color = "blue", size = 2) + 
+  labs(
+    title = "Average Stress Level by Age",
+    x = "Age",
+    y = "Average Stress Level (1-10)"
+  ) +
+  theme_minimal()
+
+```
+
+Here we see that our previous assumption is not necessarily true. Younger individuals (ages 20-40) generally report higher stress levels, fluctuating around 6-7. As age increases, stress levels gradually decline, reaching their lowest around age 70. However, for individuals over 75, stress levels become more erratic, likely due to fewer data points or variability in responses.
+The overall trend suggests that stress decreases with age, but variability increases in older populations.
+
+Next, we performed a linear regression to confirm this correlation between age and stress level.
+```{r}
+# Performing the linear regression using the function lm()
+lm_model <- lm(Stress_Level ~ Age, data = cleaned_data)
+
+# Summarizing the regression results
+summary(lm_model)
+```
+From the linear regression, we can see that the relationship between age and stress is statistically significant, as the p-value is (<2e-16).
+
+Looking at the information above, we can decifer that: 
+- For each additional year of age, stress levels is seen to decrease by approximately -0.024938 points on average.
+- About 2.71% of the variance in stress levels is explained by age.
+
+## Stress Level before Consideration of Seeking Mental Health Support by Gender Identity
+
+Next we analyzed the relationship between gender and stress level before seeking mental health support. Because there are more women in the study, we wanted to see if this was because they had higher stress levels, and thus, were seeking mental health support. This could also be a reason as to why they felt more compelled to complete this survey about stress.
+
+```{r, echo = FALSE}
+cleaned_data <- cleaned_data %>%
+  mutate(Gender_Identity = factor(Gender_Identity))
+ggplot(cleaned_data, aes(x = Gender_Identity, y = Stress_Before_Mental_Health, fill = Gender_Identity)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Stress Levels by Gender Identity Before Consideration of Seeking Mental Health Support",
+       x = "Gender Identity",
+       y = "Stress Level") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+We created a boxplot with the "Female" or "Male" on the x-axis as the two labels, and the stress levels on the y-axis as indications of perceived stress levels: 1 being very little stress and 10 being very large amounts of stress.
+We see that the median for women is much higher than for men, which confirms our hypothesis. Because the medium stress level for women is the highest option (10), our previous bar chart of the distribution of stress levels which was centered around 7.5 and not 10 is likely because men reported lower stress levels. 
+
+However the overall interquartile range is surprisingly similar between the two categories, meaning both men and women were willing to undergo high levels of stress before reaching out to seek support. This could be due to the stigma around mental health support in the early 2000s.
+
+## Stress Levels by Marital Status
+
+Next, we wanted to understand if marital status affected stress levels.
+
+```{r}
+# We first cleaned the "Marital_Status" variable by renaming the numerical response to a string format so it is easier to understand.
+cleaned_data <- cleaned_data %>%
+  mutate(Marital_Status = case_when(
+    Marital_Status == 1 ~ "Married",
+    Marital_Status == 2 ~ "Widowed",
+    Marital_Status == 3 ~ "Divorced",
+    Marital_Status == 4 ~ "Separated",
+    Marital_Status == 5 ~ "Never Married",
+    TRUE ~ "No Response"
+  ))
+# Then we used ggplot to create a box plot for each category of marital status.
+ggplot(cleaned_data, aes(x = Marital_Status, y = Stress_Level, fill = Marital_Status)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Stress Levels by Marital Status",
+       x = "Marital Status",
+       y = "Stress Level (1-10)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The graph shows the trend of average stress levels (1-10) by Marital Status.
+Divorced individuals tend to have a wider range of stress levels, with a higher median compared to other groups. Married individuals generally report slightly lower median stress levels, with less variability in their responses. Never Married and Separated individuals show similar distributions, both exhibiting a tendency toward higher stress levels. Widowed individuals have a moderate median stress level, with some outliers on the higher end. The No Response category follows a similar distribution to the other groups but shows slightly less variability. We could see that while marital status may have some influence on stress levels, the overlapping distributions suggest that stress varies significantly within each group.
+
+
+# Summary of Analysis
+
+Our analysis of the Stress in America dataset shows that stress levels were high across all groups, which makes sense given that this survey was conducted in 2008, right in the middle of the financial crisis. The economy was crashing, unemployment was rising, and many people were losing their homes. Younger adults (20-40) may have been hit the hardest, facing job losses and financial instability just as they were trying to build their futures. This could explain why they reported higher stress levels. The histogram of stress levels showed a strong shift toward higher ratings, suggesting that stress was a widespread problem during this time. Older adults, on the other hand, reported lower stress on average, possibly because they had more financial security or had already lived through other economic downturns and felt more prepared to handle the situation.
+
+One of the biggest differences we found was between men and women. Women reported significantly higher stress levels than men, but this doesn’t necessarily mean men weren’t feeling stressed. Research has shown that men and women express stress differently—women tend to talk about their stress more openly, while men often keep it to themselves or find other ways to cope. This could be one reason why more women filled out the survey. Our bar chart of gender responses showed a clear imbalance, with more women participating than men. This doesn’t mean men weren’t struggling—it just suggests they may not have been as willing to report it.
+
+Mental health stigma in 2008 was also likely a big factor in the survey results. At the time, people weren’t as open about discussing stress or seeking help as they are today. This could explain why so many responses had missing values (NA) in questions about stress and mental health support. Some participants may have skipped these questions because they weren’t comfortable talking about their struggles. The high number of missing values in the location (MSA) data could also mean that people didn’t want to share personal details, especially in a survey discussing mental health.
+
+When looking at marital status and stress, we saw that people who were widowed, divorced, or separated reported higher stress levels compared to those who were married or had never married. The box plot of stress levels by marital status showed a clear difference, which makes sense—going through a breakup or losing a spouse can be emotionally and financially stressful, and the financial crisis likely made things even worse for them.
+
+Overall, the data reflects how economic uncertainty, gender norms, and mental health stigma shaped how people reported stress in 2008. Many of the trends we found, like younger adults and single individuals reporting higher stress, and women being more likely to participate, line up with what we know about stress and coping behaviors. It would be interesting to compare this with more recent data to see how much attitudes toward stress and mental health have changed.
+
+Dataset used:
+American Psychological Association. (2025). Stress in America, United States, 2007–2018 (ICPSR 37288-v2). Inter-university Consortium for Political and Social Research [distributor]. https://doi.org/10.3886/ICPSR37288.v2
+
+Works Cited:
+Boughner, E., & Frewen, P. (2016). Gender differences in perceived causal relations between trauma-related symptoms and substance use disorders in online and outpatient samples. Traumatology, 22(4), 288–298. https://doi.org/10.1037/trm0000100
+
+Bureau of Labor Statistics (BLS). (2009). The employment situation: December 2008.
+https://www.bls.gov/news.release/archives/empsit_01092009.pdf
+
+Dagher RK, Chen J, Thomas SB (2015) Gender Differences in Mental Health Outcomes before, during, and after the Great Recession. PLoS ONE 10(5): e0124103. https://doi.org/10.1371/journal.pone.0124103
+
+Esch, T., Stefano, G. B., Fricchione, G. L., & Benson, H. (2002, May 15). (PDF) stress in cardiovascular disease. Medical Science Monitor. https://www.researchgate.net/publication/11359375_Stress_in_cardiovascular_disease
+
+Heretick, D. M. L. (2013). Clinicians’ reports of the impact of the 2008 financial crisis on mental health clients. Journal of Social, Behavioral, and Health Sciences, 7(1), 1–22. https://doi.org/10.5590/JSBHS.2013.07.1.01
+
+Kuehner C. (2017). Why is depression more common among women than among men?. The lancet. Psychiatry, 4(2), 146–158. https://doi.org/10.1016/S2215-0366(16)30263-2
+
+McEwen, B. S. (2017). Neurobiological and systemic effects of chronic stress. Chronic Stress, 1(1), 247054701769232. https://doi.org/10.1177/2470547017692328
