@@ -82,7 +82,8 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
 
 
 ## Featured Deliverable
-* [Final Slide Deck]([https://docs.google.com/presentation/d/1UtZyBbUDP3E7EUyHZbA9DxTydvEjCJLNcWkVNjZLvf4/edit?usp=sharing])
+* [Final Slide Deck](https://docs.google.com/presentation/d/1UtZyBbUDP3E7EUyHZbA9DxTydvEjCJLNcWkVNjZLvf4/edit?usp=sharing)
+
 
 
 ## Contact
