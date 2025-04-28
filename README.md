@@ -81,6 +81,22 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
 6. **Session Files**  
    Files like `.RData` and `.Rhistory` are included but are optional. They can be used to recreate previous R sessions if needed.
 
+## Project Structure
+```
+.
+├── data/
+│   └── 37288-0003-Data.tsv
+├── renv/
+│   ├── .gitignore
+│   ├── activate.R
+│   ├── library/
+│   ├── settings.json
+│   └── staging/
+├── EDANotebookFinal.Rmd
+├── qtm302class.Rproj
+└── renv.lock
+```
+
 
 ## Featured Deliverable
 * [Final Slide Deck](https://docs.google.com/presentation/d/1UtZyBbUDP3E7EUyHZbA9DxTydvEjCJLNcWkVNjZLvf4/edit?usp=sharing)
