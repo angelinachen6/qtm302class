@@ -56,8 +56,8 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
 1. **Clone this repository**  
    Clone the repository to your local machine:
    ```bash
-   git clone [your-repo-link]
-   cd [your-repo-name]
+   git clone https://github.com/angelinachen6/qtm302class.git
+   cd qtm302class
    ```
 
 2. **Open the RStudio Project**  
