@@ -42,9 +42,10 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
   - Created visual hierarchies of stress sources from most to least common (with money at the top and personal health at the bottom)
 
 - **Challenges:**
-  - Handling a large number of categorical coping mechanisms and stress source variables.
-  - Managing gender biases based on and missing values within survey data.
+  - Handling a large number of categorical coping mechanisms (smoking, drinking) and stress source variables (money, work, economy, job stability).
   - Ensuring correct interpretation of survey weights and generalizability.
+    - Standardizing "male" and "female" values based on uneven numbers of survey participants in each category.
+  - Handeling missing values within survey data.
 
 - **Potential Next Steps:**
   - Expand analysis to track changes across multiple years outside of 2007-2009.
