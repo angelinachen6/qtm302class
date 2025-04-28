@@ -81,8 +81,8 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
    Files like `.RData` and `.Rhistory` are included but are optional. They can be used to recreate previous R sessions if needed.
 
 
-## Featured Notebooks/Analysis/Deliverables
-* [Final Slide Deck]([link-to-Final-Slideshow](https://docs.google.com/presentation/d/1UtZyBbUDP3E7EUyHZbA9DxTydvEjCJLNcWkVNjZLvf4/edit?usp=sharing))
+## Featured Deliverable
+* [Final Slide Deck]([https://docs.google.com/presentation/d/1UtZyBbUDP3E7EUyHZbA9DxTydvEjCJLNcWkVNjZLvf4/edit?usp=sharing])
 
 
 ## Contact
