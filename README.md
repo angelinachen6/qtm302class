@@ -105,5 +105,5 @@ We used the 2008 "Stress in America" survey from the American Psychological Asso
 
 ## Contact
 * Angelina Chen (ID: ACCHEN5, angelina.chen@emory.edu, Department of Quantitative Theory and Methods, Emory University)
-* Cassie Yu
+* Cassie Yu (ID: CYYU123, cassie.yu@emory.edu, Department of Quantitative Theory and Methods, Emory University)
 * Yoonseo Bae
