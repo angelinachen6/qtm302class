@@ -7,11 +7,12 @@ The purpose of this project is to examine how stress experiences and coping mech
 
 
 ### Methods Used
-* Inferential Statistics (t-tests)
-* Data Visualization
-  * Bar graphs
-  * Box plots
-  * Time series analysis
+* Inferential Statistics (t-tests) – Used to compare average stress levels and coping strategy usage between men and women, with p-values indicating statistically significant differences.
+* Bar graphs
+* Box plots
+* Time series analysis
+  * Tracked trends in stress levels and stress sources across 2007 to 2009 to observe how patterns shifted over time.
+  * Highlighted whether gendered differences in stress remained consistent, increased, or declined across the economic crisis period.
 
 ### Technologies
 * R (RStudio)
