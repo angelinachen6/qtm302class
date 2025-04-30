@@ -4,13 +4,15 @@ author:
   - "Cassie Yu"
   - "Yoonseo Bae"
   - "Angelina Chen"
-date: "2025-03-04"
+date: "2025-04-30"
 output: html_document
 ---
-# Introduction (MIGHT NEED TO ADD MORE DETAILS FROM OUR RESEARCH PROPOSAL?)  
+# Introduction  
 The 2008 economic recession precipitated unprecedented financial instability, disrupting gendered labor dynamics and exacerbating stress disparities. This study examines how economic stress—defined as acute financial uncertainty and employment precarity—manifested differentially by gender during this period, with a focus on mediating factors such as employment sector, caregiving responsibilities, and societal expectations. While chronic stress literature broadly links stress to neurobiological and cardiovascular outcomes (McEwen et al., 2017; Esch et al., 2002), this analysis narrows its scope to the intersection of financial stress and gender, a critical gap given that men experienced disproportionate job losses in male-dominated industries (e.g., 72% of construction/manufacturing layoffs; Starr, 2014), while married women’s employment rose 5.2% as they assumed breadwinning roles (BLS, 2008).
 
 Gendered stress disparities are well-documented: women exhibit higher rates of stress-precipitated depression (Kuehner, 2017), whereas men are more vulnerable to stress-related substance use disorders (Boughner & Frewen, 2016). However, prior studies neglect how systemic economic shocks amplify these disparities, relying on clinician-reported data (Heretick, 2013) or limited mental health indicators (Dagher et al., 2015). This study addresses these limitations by analyzing direct self-reports from the Stress in America survey (APA, 2008), which captures granular data on stress sources, coping mechanisms, and health outcomes stratified by gender.
+
+We chose the Stress in America dataset (2007-2009) because it offers a timely, nationally representative snapshot of psychological and physiological responses to financial stress during a major economic crisis. Unlike clinical datasets, it reflects self-reported perceptions of stress, allowing us to analyze not just mental health symptoms, but also coping styles, physical health complaints, and gendered responsibilities (e.g., caregiving and employment). This comprehensive, multidimensional structure enables us to make a more holistic exploration of how gender shapes the experience of economic stress and its downstream consequences.
 
 **Research Question:**
 How did stress experiences and coping mechanisms differ by gender during the 2008 economic crisis, and how were these differences linked to psychological and physical health outcomes?
@@ -49,7 +51,7 @@ data <- read.delim(file = "./data/37288-0003-Data.tsv", sep = '\t', header = TRU
 # Data Cleaning
 Before analysis, we need to clean and prepare the data to ensure that our results are meaningful and reliable. Given the breadth of the survey, which includes numerous variables on stressors, symptoms, and coping strategies,about 4050 attributes, we narrowed our focus to variables most relevant to our research goals: stress levels, coping mechanisms, employment status, and gender.
 
-Focusing on these variables allows us to address key research questions about how economic stressors during the 2008 crisis affected people differently across demographic lines. By reducing the dataset to a manageable and targeted subset, we can conduct a more focused and interpretable analysis.
+Focusing on these variables allows us to address key research questions about how economic stressors during the 2008 crisis affected people differently across demographic lines.By reducing the dataset to a manageable and targeted subset, we can conduct a more focused and interpretable analysis.
 
 The variables used in our analysis are:
 
