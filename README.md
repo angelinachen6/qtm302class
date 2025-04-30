@@ -16,10 +16,13 @@ The purpose of this project is to examine how stress experiences and coping mech
 
 ### Technologies
 * R (RStudio)
-* RMarkdown
-* ggplot2 (Visualization)
-* dplyr (Data Wrangling)
-* tidyr (Data Cleaning)
+* RMarkdown – for reproducible analysis and reporting
+* tidyverse – main suite used for data manipulation, visualization, and piping (`dplyr`, `ggplot2`, `tidyr`, `readr`, `purrr`, `stringr`)
+* ggplot2 – for creating bar plots, box plots, and time series visualizations
+* dplyr – for data wrangling and group-level summary statistics
+* tidyr – for reshaping and cleaning survey data
+* readr – for reading TSV data files efficiently
+* broom – to tidy statistical model outputs for reporting
 
 ## Project Description
 We used the 2008 "Stress in America" survey from the American Psychological Association, consisting of 3,760 responses, with a focus on 1,568 adult responses.
