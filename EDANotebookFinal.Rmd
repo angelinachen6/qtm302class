@@ -232,6 +232,8 @@ ggplot(cleaned_data, aes(x = Gender_Identity, fill = Gender_Identity)) +
 
 Looking at this bar graph, the fact that more females responded to the survey could mean that women in their 30s and 40s are more willing to discuss how they feel and therefore, may be more likely to seek help about their stress levels. It could also mean that women feel more stress, which is why they feel more compelled to complete this survey.
 
+To further investigate potential drivers behind this disparity, we next examine whether geographic context (captured by Metropolitan Statistical Area, or MSA) may contribute to variations in stress. Prior studies have shown that urban environments and regional economic conditions can influence stress levels (BLS, 2008).
+
 ## Distribution of Respondents by Metropolitan Statistical Area (MSA)
 
 To understand where in the US the survey's participants are from, we performed exploratory analysis of respondents metropolitan origin. This helps provide context for interpreting stress patterns across different urban regions in the United States.
@@ -292,6 +294,8 @@ We used code to determine the most frequent MSA, which is Denver. Then we wanted
 
 # Analysis of Correlation Between Variables
 
+After examining individual distributions of stress and demographic variables, we next analyze correlations to understand how these factors relate to one another. We begin with the relationship between age and stress to assess whether the target age range of survey respondents, primarily adults in their 30s to 40s, is associated with higher reported stress levels. This helps verify whether stress is concentrated in particular life stages, as suggested by prior research on work-life balance and financial strain in mid-adulthood (McEwen et al., 2017)x.
+
 First we analyzed the correlation between age and stress to see if the target age range for this survey actually had higher stress levels.
 
 ## Correlation Between Age and Stress Levels
@@ -319,7 +323,7 @@ ggplot(age_stress_trend, aes(x = Age, y = Average_Stress)) +
 Here we see that our previous assumption is not necessarily true. Younger individuals (ages 20-40) generally report higher stress levels, fluctuating around 6-7. As age increases, stress levels gradually decline, reaching their lowest around age 70. However, for individuals over 75, stress levels become more erratic, likely due to fewer data points or variability in responses.
 The overall trend suggests that stress decreases with age, but variability increases in older populations.
 
-Next, we performed a linear regression to confirm this correlation between age and stress level.
+While our earlier visualizations suggested that stress tends to decrease with age, particularly after age 40, we wanted to formally test the strength and direction of this relationship. Therefore, we performed a linear regression analysis to quantify the correlation between age and stress levels and determine whether the observed downward trend is statistically significant. This allows us to move from visual intuition to a more rigorous, model-based understanding of how age predicts perceived stress.
 ```{r}
 # Performing the linear regression using the function lm()
 lm_model <- lm(Stress_Level ~ Age, data = cleaned_data)
@@ -330,7 +334,9 @@ summary(lm_model)
 From the linear regression, we can see that the relationship between age and stress is statistically significant, as the p-value is (<2e-16).
 
 Looking at the information above, we can decifer that: 
+
 - For each additional year of age, stress levels is seen to decrease by approximately -0.024938 points on average.
+
 - About 2.71% of the variance in stress levels is explained by age.
 
 ## Stress Level before Consideration of Seeking Mental Health Support by Gender Identity
@@ -350,14 +356,15 @@ ggplot(cleaned_data, aes(x = Gender_Identity, y = Stress_Before_Mental_Health, f
 
 ```
 
-We created a boxplot with the "Female" or "Male" on the x-axis as the two labels, and the stress levels on the y-axis as indications of perceived stress levels: 1 being very little stress and 10 being very large amounts of stress.
+We created boxplots to visually compare the distribution of stress levels between men and women. We have "Female" or "Male" on the x-axis as the two labels, and the stress levels on the y-axis as indications of perceived stress levels: 1 being very little stress and 10 being very large amounts of stress.
+
 We see that the median for women is much higher than for men, which confirms our hypothesis. Because the medium stress level for women is the highest option (10), our previous bar chart of the distribution of stress levels which was centered around 7.5 and not 10 is likely because men reported lower stress levels. 
 
 However the overall interquartile range is surprisingly similar between the two categories, meaning both men and women were willing to undergo high levels of stress before reaching out to seek support. This could be due to the stigma around mental health support in the early 2000s.
 
 ## Stress Levels by Marital Status
 
-Next, we wanted to understand if marital status affected stress levels.
+After observing gender-based differences in stress through boxplots, we next examined whether marital status also plays a role in perceived stress levels. Prior studies suggest that relationship dynamics and caregiving responsibilities can influence how individuals experience and cope with stress (McEwen et al., 2017). By exploring marital status, we aim to identify whether partnered individuals experience more or less stress than their single counterparts and how this interacts with gender.
 
 ```{r}
 # We first cleaned the "Marital_Status" variable by renaming the numerical response to a string format so it is easier to understand.
